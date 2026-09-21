@@ -36,20 +36,6 @@ def get_config_browser_wait_timeout() -> int:
     return int(os.environ.get('BROWSER_WAIT_TIMEOUT', 1))
 
 
-def get_config_extra_challenge_titles() -> list:
-    raw = os.environ.get('ADDITIONAL_CHALLENGE_TITLES', '[]')
-    try:
-        titles = json.loads(raw)
-    except ValueError:
-        logging.warning(f"ADDITIONAL_CHALLENGE_TITLES is not a valid json, ignoring.")
-        return []
-
-    if not isinstance(titles, list):
-        logging.warning("ADDITIONAL_CHALLENGE_TITLES must be a JSON array, ignoring.")
-        return []
-
-    return [str(t) for t in titles]
-
 def get_flaresolverr_version() -> str:
     global FLARESOLVERR_VERSION
     if FLARESOLVERR_VERSION is not None:
@@ -365,3 +351,18 @@ def object_to_dict(_object):
     json_dict = json.loads(json.dumps(_object, default=lambda o: o.__dict__))
     # remove hidden fields
     return {k: v for k, v in json_dict.items() if not k.startswith('__')}
+
+def get_config_extra_titles(var: str) -> list:
+    raw = os.environ.get(var, '[]')
+    try:
+        logging.debug(f"attempting to parse additional titles: {var}")
+        titles = json.loads(raw)
+    except ValueError:
+        logging.warning(f"{var} is not a valid json, ignoring.")
+        return []
+
+    if not isinstance(titles, list):
+        logging.warning(f"{var} must be a JSON array, ignoring.")
+        return []
+
+    return [str(t) for t in titles]
