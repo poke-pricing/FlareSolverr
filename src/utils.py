@@ -18,6 +18,7 @@ CHROME_MAJOR_VERSION = None
 USER_AGENT = None
 XVFB_DISPLAY = None
 PATCHED_DRIVER_PATH = None
+ADDITIONAL_CHALLENGE_TITLES = None
 ADDITIONAL_WAIT_TITLES = None
 
 def get_config_log_html() -> bool:
@@ -360,6 +361,15 @@ def get_config_additional_wait_titles() -> list:
 
     ADDITIONAL_WAIT_TITLES = __get_config_extra_titles("ADDITIONAL_WAIT_TITLES")
     return ADDITIONAL_WAIT_TITLES
+
+
+def get_config_additional_challenge_titles() -> list:
+    global ADDITIONAL_CHALLENGE_TITLES
+    if ADDITIONAL_CHALLENGE_TITLES is not None:
+        return ADDITIONAL_CHALLENGE_TITLES
+
+    ADDITIONAL_CHALLENGE_TITLES = __get_config_extra_titles("ADDITIONAL_CHALLENGE_TITLES")
+    return ADDITIONAL_CHALLENGE_TITLES
 
 
 def __get_config_extra_titles(var: str) -> list:

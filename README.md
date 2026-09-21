@@ -299,6 +299,7 @@ This works like `request.get`, with the addition of the postData parameter. Note
 | PROMETHEUS_ENABLED     | false                  | Enable Prometheus exporter. See the Prometheus section below.                                                                                              |
 | PROMETHEUS_PORT        | 8192                   | Listening port for Prometheus exporter. See the Prometheus section below.                                                                                  |
 | ADDITIONAL_WAIT_TITLES | '[]'                   | Additional wait titles, can be used to have Flaresolverr wait for a title change if a site has a JS checking redirect. Example: `'["Checking browser.."]'` |
+| ADDITIONAL_CHALLENGE_TITLES | '[]'                   | Additional Challenge titles, can be used to have Flaresolverr wait for a title change if a site has a JS checking redirect. Example: `'["Checking browser.."]'` |
 
 Environment variables are set differently depending on the operating system. Some examples:
 
