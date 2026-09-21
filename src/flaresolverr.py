@@ -129,9 +129,6 @@ if __name__ == "__main__":
     logging.info(f'FlareSolverr {utils.get_flaresolverr_version()}')
     logging.debug('Debug log enabled')
 
-    # Load additional configuration from environment variables
-    flaresolverr_service.WAIT_TITLES.extend(utils.get_config_extra_titles("ADDITIONAL_WAIT_TITLES"))
-
     # Get current OS for global variable
     utils.get_current_platform()
 
