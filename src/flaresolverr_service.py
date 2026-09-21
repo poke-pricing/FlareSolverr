@@ -40,6 +40,7 @@ CHALLENGE_TITLES = [
     # DDoS-GUARD
     'DDoS-Guard'
 ]
+WAIT_TITLES = []
 CHALLENGE_SELECTORS = [
     # Cloudflare
     '#cf-challenge-running', '.ray_id', '.attack-box', '#cf-please-wait', '#challenge-spinner', '#trk_jschal_js', '#turnstile-wrapper', '.lds-ring',
@@ -445,6 +446,18 @@ def _evil_logic(req: V1RequestBase, driver: WebDriver, method: str) -> Challenge
     # a repeat visit from a flagged IP can land directly on the DDoS-Guard captcha page
     _raise_if_captcha_page(driver)
 
+    browser_wait_timeout = utils.get_config_browser_wait_timeout()
+
+    # confirm any redirect titles have completed.
+    for title in WAIT_TITLES:
+        while True:
+            try:
+                logging.debug("Waiting for title: " + title)
+                WebDriverWait(driver, browser_wait_timeout).until(_title_matches_ignoring_case(title))
+                break
+            except TimeoutException:
+                logging.debug("Timeout waiting for title: " + title)
+
     # find challenge by title
     challenge_found = False
     for title in CHALLENGE_TITLES:
@@ -461,7 +474,6 @@ def _evil_logic(req: V1RequestBase, driver: WebDriver, method: str) -> Challenge
                 logging.info("Challenge detected. Selector found: " + selector)
                 break
 
-    browser_wait_timeout = utils.get_config_browser_wait_timeout()
     attempt = 0
     if challenge_found:
         while True:
