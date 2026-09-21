@@ -447,9 +447,9 @@ def _evil_logic(req: V1RequestBase, driver: WebDriver, method: str) -> Challenge
     _raise_if_captcha_page(driver)
 
     browser_wait_timeout = utils.get_config_browser_wait_timeout()
-
+    wait_titles = WAIT_TITLES + utils.get_config_additional_wait_titles()
     # confirm any redirect titles have completed.
-    for title in WAIT_TITLES:
+    for title in wait_titles:
         while True:
             try:
                 logging.debug("Waiting for title: " + title)
