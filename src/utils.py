@@ -18,6 +18,7 @@ CHROME_MAJOR_VERSION = None
 USER_AGENT = None
 XVFB_DISPLAY = None
 PATCHED_DRIVER_PATH = None
+ADDITIONAL_CHALLENGE_TITLES = None
 
 
 def get_config_log_html() -> bool:
@@ -352,17 +353,32 @@ def object_to_dict(_object):
     # remove hidden fields
     return {k: v for k, v in json_dict.items() if not k.startswith('__')}
 
-def get_config_extra_titles(var: str) -> list:
+
+def get_config_additional_challenge_titles() -> list:
+    global ADDITIONAL_CHALLENGE_TITLES
+    if ADDITIONAL_CHALLENGE_TITLES is not None:
+        return ADDITIONAL_CHALLENGE_TITLES
+
+    ADDITIONAL_CHALLENGE_TITLES = __get_config_extra_titles("ADDITIONAL_CHALLENGE_TITLES")
+    return ADDITIONAL_CHALLENGE_TITLES
+
+
+def __get_config_extra_titles(var: str) -> list:
     raw = os.environ.get(var, '[]')
     try:
-        logging.debug(f"attempting to parse additional titles: {var}")
-        titles = json.loads(raw)
+        parsed = json.loads(raw)
     except ValueError:
-        logging.warning(f"{var} is not a valid json, ignoring.")
-        return []
+        logging.warning(f"{var} is not valid JSON, ignoring: {raw!r}")
+        parsed = []
+    if not isinstance(parsed, list):
+        logging.warning(f"{var} must be a JSON array, ignoring: {raw!r}")
+        parsed = []
 
-    if not isinstance(titles, list):
-        logging.warning(f"{var} must be a JSON array, ignoring.")
-        return []
+    titles = []
+    for title in parsed:
+        if isinstance(title, str) and title.strip():
+            titles.append(title)
+        else:
+            logging.warning(f"{var}: ignoring invalid entry {title!r}")
 
-    return [str(t) for t in titles]
+    return titles

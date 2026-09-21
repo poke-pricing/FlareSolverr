@@ -446,8 +446,9 @@ def _evil_logic(req: V1RequestBase, driver: WebDriver, method: str) -> Challenge
     _raise_if_captcha_page(driver)
 
     # find challenge by title
+    challenge_titles = CHALLENGE_TITLES + utils.get_config_additional_challenge_titles()
     challenge_found = False
-    for title in CHALLENGE_TITLES:
+    for title in challenge_titles:
         if title.lower() == page_title.lower():
             challenge_found = True
             logging.info("Challenge detected. Title found: " + page_title)
@@ -468,7 +469,7 @@ def _evil_logic(req: V1RequestBase, driver: WebDriver, method: str) -> Challenge
             try:
                 attempt = attempt + 1
                 # wait until the title changes
-                for title in CHALLENGE_TITLES:
+                for title in challenge_titles:
                     logging.debug("Waiting for title (attempt " + str(attempt) + "): " + title)
                     WebDriverWait(driver, browser_wait_timeout).until_not(_title_matches_ignoring_case(title))
 
