@@ -453,7 +453,7 @@ def _evil_logic(req: V1RequestBase, driver: WebDriver, method: str) -> Challenge
         while True:
             try:
                 logging.debug("Waiting for title: " + title)
-                WebDriverWait(driver, browser_wait_timeout).until(_title_matches_ignoring_case(title))
+                WebDriverWait(driver, browser_wait_timeout).until_not(_title_matches_ignoring_case(title))
                 break
             except TimeoutException:
                 logging.debug("Timeout waiting for title: " + title)
